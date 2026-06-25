@@ -75,7 +75,10 @@ router.post('/targets/:target/login', async (req, res) => {
     }
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: err.message || err.stderr });
+    const stderr = err.stderr || err.message || '';
+    const reasonMatch = stderr.match(/initiator reported error \(\d+ - (.+?)\)/);
+    const reason = reasonMatch ? reasonMatch[1] : stderr.split('\n').filter(Boolean).pop();
+    res.status(500).json({ error: reason || '登录失败' });
   }
 });
 

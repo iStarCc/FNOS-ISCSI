@@ -8,7 +8,6 @@
     <div class="card">
       <div class="card-title">发现目标</div>
 
-      <!-- 扫描方式切换 -->
       <div class="scan-tabs">
         <button class="scan-tab" :class="{ active: mode === 'auto' }" @click="mode = 'auto'">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -32,7 +31,7 @@
             正在扫描局域网端口 3260，请稍候...
           </span>
           <span v-if="!scanning && scanDone" style="font-size: 12px; color: var(--text-2);">
-            发现 {{ scanHosts.length }} 个 iSCSI 主机，{{ discoveredTargets.length }} 个目标
+            发现 {{ scanHosts.length }} 个 iSCSI 主机，{{ autoTargets.length }} 个目标
           </span>
         </div>
       </div>
@@ -59,7 +58,7 @@
         {{ success }}
       </div>
 
-      <table v-if="discoveredTargets.length">
+      <table v-if="currentTargets.length">
         <thead>
           <tr>
             <th>目标名称</th>
@@ -69,7 +68,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="t in discoveredTargets" :key="t.target + t.portal">
+          <tr v-for="t in currentTargets" :key="t.target + t.portal">
             <td class="mono">{{ t.target }}</td>
             <td>{{ t.portal }}</td>
             <td><span class="badge badge-info">{{ t.tpgt }}</span></td>
@@ -82,7 +81,7 @@
         </tbody>
       </table>
 
-      <div class="empty-state" v-if="!discoveredTargets.length && !discovering && !scanning && !error">
+      <div class="empty-state" v-if="!currentTargets.length && !discovering && !scanning && !error">
         <div class="empty-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -124,12 +123,13 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { api } from '../api/index.js';
 
 const mode = ref('auto');
 const portal = ref('');
-const discoveredTargets = ref([]);
+const autoTargets = ref([]);
+const manualTargets = ref([]);
 const discovering = ref(false);
 const scanning = ref(false);
 const scanDone = ref(false);
@@ -143,18 +143,21 @@ const chapUser = ref('');
 const chapPassword = ref('');
 const autoReconnect = ref(true);
 
+const currentTargets = computed(() =>
+  mode.value === 'auto' ? autoTargets.value : manualTargets.value
+);
+
 async function doScan() {
   error.value = '';
   success.value = '';
   scanning.value = true;
   scanDone.value = false;
-  discoveredTargets.value = [];
   try {
     const res = await api.scanNetwork();
     scanHosts.value = res.hosts || [];
-    discoveredTargets.value = res.targets || [];
+    autoTargets.value = res.targets || [];
     scanDone.value = true;
-    if (!discoveredTargets.value.length) {
+    if (!autoTargets.value.length) {
       error.value = scanHosts.value.length
         ? `发现 ${scanHosts.value.length} 个主机，但未找到 iSCSI 目标`
         : '局域网内未发现开放 3260 端口的主机';
@@ -172,8 +175,8 @@ async function doDiscover() {
   discovering.value = true;
   try {
     const res = await api.discover(portal.value.trim());
-    discoveredTargets.value = res.targets || [];
-    if (!discoveredTargets.value.length) {
+    manualTargets.value = res.targets || [];
+    if (!manualTargets.value.length) {
       error.value = '未发现任何目标';
     }
   } catch (err) {
@@ -206,7 +209,8 @@ async function doLogin() {
     success.value = `已登录: ${t.target}`;
     loginDialog.value = null;
   } catch (err) {
-    error.value = err.message;
+    loginDialog.value = null;
+    error.value = `登录失败: ${err.message}`;
   } finally {
     loggingIn[t.target] = false;
   }
