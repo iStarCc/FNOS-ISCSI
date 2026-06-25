@@ -1,0 +1,14 @@
+appname               = fnnas.iscsi
+version               = 1.0.0
+display_name          = ISCSI挂载
+desc                  = fnOS iSCSI 挂载工具，支持局域网自动扫描发现、目标登录、会话管理、磁盘格式化与挂载，以及 I/O 性能监控和开机自动重连
+platform              = all
+source                = thirdparty
+maintainer            = iStars
+distributor           = iStars
+url                   = https://github.com/iStarCc/FNOS-ISCSI.git
+desktop_uidir         = ui
+desktop_applaunchname = fnnas.iscsi.Application
+install_dep_apps      = nodejs_v22
+ctl_stop              = true
+disable_authorization_path = true

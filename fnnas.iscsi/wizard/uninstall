@@ -1,0 +1,26 @@
+[
+    {
+        "stepTitle": "卸载须知",
+        "items": [
+            {
+                "type": "tips",
+                "helpText": "<div style=\"background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:14px 16px;margin-bottom:12px;\"><span style=\"color:#DC2626;font-weight:600;font-size:14px;\">⚠ 重要警告</span><p style=\"color:#991B1B;margin:8px 0 0;font-size:13px;line-height:1.6;\">卸载本应用 <strong>不会</strong> 自动断开 iSCSI 连接或卸载挂载点。<br/>如果未正确清理，可能导致 <strong>存储空间损坏</strong> 或 <strong>数据丢失</strong>。</p></div>"
+            },
+            {
+                "type": "tips",
+                "helpText": "<div style=\"background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:14px 16px;\"><p style=\"font-weight:600;font-size:13px;margin:0 0 10px;color:#0F172A;\">卸载前请依次完成：</p><div style=\"font-size:13px;line-height:1.8;color:#334155;\"><div style=\"margin-bottom:4px;\"><span style=\"display:inline-block;width:22px;height:22px;background:#3B82F6;color:#fff;border-radius:50%;text-align:center;line-height:22px;font-size:12px;font-weight:600;margin-right:8px;\">1</span>若设备已加入飞牛存储空间 → 前往 <strong>空间管理</strong> 移除相关空间</div><div style=\"margin-bottom:4px;\"><span style=\"display:inline-block;width:22px;height:22px;background:#3B82F6;color:#fff;border-radius:50%;text-align:center;line-height:22px;font-size:12px;font-weight:600;margin-right:8px;\">2</span>前往本应用 <strong>挂载管理</strong> → 卸载所有手动挂载点</div><div><span style=\"display:inline-block;width:22px;height:22px;background:#3B82F6;color:#fff;border-radius:50%;text-align:center;line-height:22px;font-size:12px;font-weight:600;margin-right:8px;\">3</span>前往本应用 <strong>会话管理</strong> → 登出所有 iSCSI 会话</div></div></div>"
+            },
+            {
+                "type": "switch",
+                "field": "wizard_confirm_uninstall",
+                "label": "我已完成上述操作，确认卸载",
+                "rules": [
+                    {
+                        "required": true,
+                        "message": "请确认已完成卸载前的清理操作"
+                    }
+                ]
+            }
+        ]
+    }
+]
