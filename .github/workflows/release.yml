@@ -23,7 +23,7 @@ jobs:
 
       - name: Download fnpack
         run: |
-          curl -fsSL -o /tmp/fnpack https://static2.fnnas.com/pkg/fnpack/fnpack-1.2.1-linux-amd64
+          curl -fsSL -o /tmp/fnpack https://static2.fnnas.com/fnpack/fnpack-1.2.1-linux-amd64
           chmod +x /tmp/fnpack
 
       - name: Build fpk
