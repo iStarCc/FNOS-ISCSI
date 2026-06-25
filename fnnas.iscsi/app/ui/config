@@ -1,0 +1,14 @@
+{
+    ".url": {
+        "fnnas.iscsi.Application": {
+            "title": "ISCSI挂载",
+            "icon": "images/icon_{0}.png",
+            "type": "iframe",
+            "protocol": "",
+            "gatewaySocket": "iscsi.sock",
+            "gatewayPrefix": "/app/fnnas-iscsi",
+            "url": "/app/fnnas-iscsi",
+            "allUsers": false
+        }
+    }
+}

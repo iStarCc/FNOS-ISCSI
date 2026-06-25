@@ -1,6 +1,7 @@
 node_modules/
 dist/
 *.fpk
-fnnas.iscsi/app/
+fnnas.iscsi/app/*
+!fnnas.iscsi/app/ui/
 .cursor/
 Docs/

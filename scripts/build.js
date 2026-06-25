@@ -26,6 +26,10 @@ function copyDir(src, dest) {
 }
 
 function cleanAppDir() {
+  if (!fs.existsSync(APP_DIR)) {
+    fs.mkdirSync(APP_DIR, { recursive: true });
+    return;
+  }
   const keep = new Set(['ui']);
   for (const entry of fs.readdirSync(APP_DIR, { withFileTypes: true })) {
     if (keep.has(entry.name)) continue;
