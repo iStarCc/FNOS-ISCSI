@@ -1,0 +1,49 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Download fnpack
+        run: |
+          curl -fsSL -o /tmp/fnpack https://static2.fnnas.com/pkg/fnpack/fnpack-1.2.1-linux-amd64
+          chmod +x /tmp/fnpack
+
+      - name: Build fpk
+        run: node scripts/build.js
+
+      - name: Extract version from tag
+        id: version
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ISCSI挂载 ${{ steps.version.outputs.tag }}
+          body: |
+            ## ISCSI挂载 ${{ steps.version.outputs.tag }}
+
+            ### 安装方法
+            1. 下载 `fnnas.iscsi.fpk` 文件
+            2. 在 fnOS 管理界面 → 应用管理 → 手动安装
+            3. 上传 fpk 文件完成安装
+          files: fnnas.iscsi/fnnas.iscsi.fpk
+          draft: false
+          prerelease: false
